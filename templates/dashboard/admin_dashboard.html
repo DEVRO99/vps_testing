@@ -1,0 +1,175 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block title %} Admin Dashboard {% endblock %}
+
+{% block body %}
+<style>
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background: #eee;
+    }
+
+    tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: white;
+        font-size: 12px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .cancel {
+        background: red;
+    }
+
+    .badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .confirmed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .paid {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .nopay {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .disabled {
+        opacity: 0.5;
+    }
+</style>
+
+<div class="top-bar">
+    <h2>Admin Dashboard</h2>
+</div>
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Car Model</th>
+        <th>Location</th>
+        <th>Pickup Date</th>
+        <th>Return Date</th>
+        <th>Status</th>
+        <th>Payment</th>
+        <th>Payment SS</th>
+        <th>Action</th>
+    </tr>
+
+    {% for b in bookings %}
+    <tr>
+        <td>{{ b.user.username }}</td>
+        <td>{{ b.car.car_name }}</td>
+        <td>{{ b.location.name|default:"N/A" }}</td>
+        <td>{{ b.pickup_datetime }}</td>
+        <td>{{ b.return_datetime }}</td>
+
+        <!-- BOOKING STATUS -->
+        <td>
+            {% if b.status == "pending" %}
+            <span class="badge pending">Pending</span>
+            {% elif b.status == "confirmed" %}
+            <span class="badge confirmed">Confirmed</span>
+            {% elif b.status == "cancelled" %}
+            <span class="badge cancelled">Cancelled</span>
+            {% endif %}
+        </td>
+
+        <!-- PAYMENT STATUS -->
+        <td>
+            {% if b.paymentmodel %}
+            {% if b.paymentmodel.status == "paid" %}
+            <span class="badge paid">Paid</span>
+            {% elif b.paymentmodel.status == "rejected" %}
+            <span class="badge cancelled">Rejected</span>
+            {% else %}
+            <span class="badge pending">Pending</span>
+            {% endif %}
+            {% else %}
+            <span class="badge nopay">No Payment</span>
+            {% endif %}
+        </td>
+
+        <!-- PAYMENT SCREENSHOT -->
+        <td>
+            {% if b.paymentmodel and b.paymentmodel.screenshot %}
+            <a href="{{ b.paymentmodel.screenshot.url }}" target="_blank" class="btn" style="background:#007bff;">
+                View SS
+            </a>
+            {% else %}
+            No Screenshot
+            {% endif %}
+        </td>
+
+        <!-- ACTION -->
+        
+        <td>
+            {% if b.status == "pending" %}
+            <form method="POST" action="/cancel/{{ b.id }}/">
+                {% csrf_token %}
+                <button type="submit" class="btn cancel">
+                    Cancel
+                </button>
+            </form>
+            {% else %}
+            <span class="disabled">No Action</span>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="9">No bookings found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

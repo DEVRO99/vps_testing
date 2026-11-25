@@ -1,0 +1,30 @@
+# Django
+Django==6.0.10
+django-jazzmin==3.0.5
+
+# Authentication
+django-allauth==65.22.0
+
+# Google reCAPTCHA
+django-recaptcha==4.1.0
+
+# PWA and Web Push
+django-pwa==2.0.1
+django-webpush==0.3.6
+
+# Background tasks
+celery==5.7.0
+django-celery-beat==2.9.0
+redis==8.1.0
+
+# Database
+psycopg[binary]
+
+# Image processing
+Pillow==13.0.0
+
+# Environment variables
+python-dotenv>=1.0,<2.0
+
+# Production server
+gunicorn>=23,<24

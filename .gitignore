@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+
+# Media uploads
+media/
+
+# Private keys
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+
+# Mac
+.DS_Store
+
+# Git
